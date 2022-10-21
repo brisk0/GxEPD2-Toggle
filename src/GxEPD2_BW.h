@@ -74,6 +74,8 @@
 #include "it8951/GxEPD2_it78_1872x1404.h"
 #include "it8951/GxEPD2_it103_1872x1404.h"
 
+#define GxEPD_TOGGLE GxEPD_DARKGREY
+
 template<typename GxEPD2_Type, const uint16_t page_height>
 class GxEPD2_BW : public GxEPD2_GFX_BASE_CLASS
 {
@@ -141,10 +143,19 @@ class GxEPD2_BW : public GxEPD2_GFX_BASE_CLASS
       // check if in current page
       if ((y < 0) || (y >= int16_t(_page_height))) return;
       uint16_t i = x / 8 + y * (_pw_w / 8);
-      if (color)
-        _buffer[i] = (_buffer[i] | (1 << (7 - x % 8)));
-      else
-        _buffer[i] = (_buffer[i] & (0xFF ^ (1 << (7 - x % 8))));
+      switch (color)
+      {
+        case GxEPD_WHITE:
+          _buffer[i] = (_buffer[i] | (1 << (7 - x % 8)));
+          break;
+        case GxEPD_BLACK:
+          _buffer[i] = (_buffer[i] & (0xFF ^ (1 << (7 - x % 8))));
+          break;
+        case GxEPD_TOGGLE:
+          // Flip whatever bit is already in the buffer
+          _buffer[i] = (_buffer[i] ^ (1 << (7 - x % 8)));
+          break;
+      }
     }
 
     void init(uint32_t serial_diag_bitrate = 0) // = 0 : disabled
