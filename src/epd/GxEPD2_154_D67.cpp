@@ -340,7 +340,7 @@ void GxEPD2_154_D67::_InitDisplay()
   _writeData(0x00);
   _writeData(0x00);
   _writeCommand(0x3C); // BorderWavefrom
-  _writeData(0x05);
+  _writeData(0x02);
   _writeCommand(0x18); // Read built-in temperature sensor
   _writeData(0x80);
   _setPartialRamArea(0, 0, WIDTH, HEIGHT);
